@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}Profile{% endblock %}
+
+
+{% block breadcrumbs %}{{ block.super }}<li class="breadcrumb-item active" aria-current="page">Your Profile</li>{% endblock %}
+
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3 class="mb-0">{{ user.username }}</h3>
+    </div>
+    <div class="card-body">
+      <div class="row mb-4">
+        <div class="col-md-3">
+          {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" alt="{{ user.username }}'s Avatar" class="img-fluid rounded-circle">
+          {% else %}
+            <img src="{% static 'images/avatars/avatar_200x200.jpg' %}" alt="Default Avatar" class="img-fluid rounded-circle">
+          {% endif %}
+        </div>
+        <div class="col-md-9">
+          {% if user.public_name %}
+            <h4>{{ user.public_name }}</h4>
+          {% else %}
+            <h4><em class="text-muted">Who am I?</em></h4>
+          {% endif %}
+          {% if user.about %}
+            <p>{{ user.about }}</p>
+          {% else %}
+            <p><em class="text-muted">No bio available.</em></p>
+          {% endif %}
+          {% if user.is_public %}
+            <p><span title="You can share files" class="badge bg-success">Public</span></p>
+          {% else %}
+            <p><span title="Nobody can see your shared files" class="badge bg-danger">Private</span></p>
+          {% endif %}
+        </div>
+      </div>
+      <dl class="row">
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">{{ user.email }}</dd>
+
+        <dt class="col-sm-3">Date Joined</dt>
+        <dd class="col-sm-9">{{ user.date_joined|date:"F j, Y, g:i a T" }}</dd>
+
+        <dt class="col-sm-3">Last Sign In</dt>
+        <dd class="col-sm-9">{{ user.last_login|date:"F j, Y, g:i a T" }}</dd>
+
+        <dt class="col-sm-3">Member Status</dt>
+        <dd class="col-sm-9">
+            {% if user.is_staff %}
+                <span class="badge bg-danger">Staff</span>
+            {% else %}
+                <span class="badge bg-success">Member</span>
+            {% endif %}
+            {% if user.is_superuser %}
+                <span class="badge bg-danger">Superuser</span>
+            {% endif %}
+        </dd>
+      </dl>
+
+      <div class="mt-4">
+            <a href="{% url 'home' %}" class="btn btn-secondary">Back Home</a>
+            <a href="{% url 'users:update' %}" class="btn btn-primary">Update</a>
+            <a href="{% url 'users:password_change' %}" class="btn btn-warning">Change Password</a>
+      </div>
+    </div>
+</div>
+{% endblock %}

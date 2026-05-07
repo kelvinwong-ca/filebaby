@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static filecount %}
+
+
+{% block title %}{{ site_name }}{% endblock %}
+
+
+{% block breadcrumbs %}<li class="breadcrumb-item active" aria-current="page">Home</li>{% endblock %}
+
+
+{% block body_class %}main-page{% endblock %}
+
+
+{% block main %}
+<main class="">
+        <div class="container mt-4">
+<div class="row">
+    <div class="col-12">
+        <h1>Welcome to {{ site_name }}</h1>
+    </div>
+    <div class="col-lg-6 pb-5">
+        <p>
+            An <a href="https://github.com/kelvinwong-ca/filebaby" title="View on Github">ImageField &amp; FileField demo</a>. View the blog posts:
+        </p>
+        <ul>
+            <li><a href="https://kelvinwong.ca/blog/2026/add-an-avatar-to-your-profile-using-imagefield-in-django-6-0/">Add an avatar to your profile using ImageField in Django 6.0</a></li>
+            <li><a href="https://kelvinwong.ca/blog/2026/upload-files-using-filefield-and-generic-class-based-views-in-django-6-0/">Upload files using FileField and Generic Class-based Views</a></li>
+        </ul>
+    </div>
+    <div id="start-here" class="col-lg-6">
+        <div id="get-started">
+            <h2>
+                {% if not user.is_authenticated %}
+                Get Started
+                {% else %}
+                <a class="link-light" href="{% url 'files:list_from' user.slug %}">Your Files ({% file_count user %})</a>
+                {% endif %}
+            </h2>
+            <p>
+                {% if not user.is_authenticated %}
+                <a href="{% url 'users:signup' %}" class="btn btn-primary btn-lg force-outline me-2">Sign Up</a>
+                <a href="{% url 'users:signin' %}" class="btn btn-secondary btn-lg">Sign In</a>
+                {% else %}
+                <a href="{% url 'files:create' %}" class="btn btn-primary btn-lg force-outline me-2">Add a File</a>
+                <a href="{% url 'files:list' %}" class="btn btn-secondary btn-lg">All Files</a>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</div>
+</div>
+</main>
+<div id="photo-wrapper">
+    <img src="{% static 'images/heroes/laptops_files_1233x432.jpg' %}" alt="Django File Uploads Illustration">
+</div>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "focused.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}Signed Out{% endblock %}
+
+
+{% block breadcrumbs %}{{ block.super }}<li class="breadcrumb-item active" aria-current="page">Signed Out</li>{% endblock %}
+
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h1>Signed Out</h1>
+            </div>
+            <div class="card-body">
+                <p class="lead">You have been signed out successfully.</p>
+                <a href="{% url 'users:signin' %}" class="btn btn-primary">Sign In Again</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

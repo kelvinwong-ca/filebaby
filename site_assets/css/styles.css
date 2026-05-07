@@ -1,0 +1,57 @@
+#start-here {
+    position: relative;
+}
+#photo-wrapper {
+    width: 100%;
+    height: 50vh;
+    overflow: hidden;
+}
+
+#photo-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.force-outline {
+    outline: 2px solid #fff !important;
+    outline-offset: 2px !important;
+}
+#get-started {
+  /* Ribbon Shape Variables */
+  --r: 5em;
+
+  /* Color - Red */
+  color: #fff;
+  background:
+    radial-gradient(50% .2em at top,#000a,#0000) border-box,
+    rgb(230, 76, 71) padding-box;
+
+  /* Shape */
+  border-inline: .5em solid #0000;
+  clip-path: polygon(0 0,100% 0,100% 100%,calc(100% - .5em) 100%,50% calc(100% - var(--r)),.5em 100%,0 100%);
+
+  /* Positioning and Sizing */
+  position: relative;
+  z-index: 100;
+  margin-bottom: -6em;
+  margin-left: auto;
+  margin-right: auto;
+
+  /* Dimensions/Padding */
+  width: 100%;
+  max-width: 350px;
+  min-height: 30vh;
+  padding: 3rem 1.5rem calc(var(--r) + 3rem);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#get-started h2 {
+    color: white;
+    margin-bottom: 2rem;
+}

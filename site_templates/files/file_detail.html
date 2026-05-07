@@ -1,0 +1,63 @@
+{% extends "files/base.html" %}
+{% load static %}
+
+
+{% block title %}{{ file.filename }}{% endblock %}
+
+
+{% block breadcrumbs %}{{ block.super }}<li class="breadcrumb-item active" aria-current="page">Detail</li>{% endblock %}
+
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+    <h3 class="mb-0 overflow-y-hidden" title="{{ file.filename }}"><span class="text-truncate d-block" style="max-width: 100%;">{{ file.filename }}</span></h3>
+    </div>
+    <div class="card-body">
+      <dl class="row">
+
+        <dt class="col-sm-3">Owner</dt>
+        <dd class="col-sm-9">
+          <div class="d-inline-flex align-items-center">
+            <a title="View files from {{ file.owner.best_name }}" href="{% url 'files:list_from' file.owner.slug %}" class="text-decoration-none">
+            {% if file.owner.avatar %}
+              <img src="{{ file.owner.avatar.url }}" alt="{{ file.owner.best_name }}'s Avatar" class="img-fluid rounded-circle" style="width: 64px; height: 64px; object-fit: cover; vertical-align: middle; margin-right: 8px;">
+            {% else %}
+              <img src="{% static 'images/avatars/avatar_200x200.jpg' %}" alt="Default Avatar" class="img-fluid rounded-circle" style="width: 64px; height: 64px; object-fit: cover; vertical-align: middle; margin-right: 8px;">
+            {% endif %}
+              {{ file.owner.best_name }}
+            </a>
+          </div>
+        </dd>
+
+        <dt class="col-sm-3">Content Type</dt>
+        <dd class="col-sm-9"><span class="badge bg-primary">{{ file.content_type }}</span></dd>
+
+        <dt class="col-sm-3">Size</dt>
+        <dd class="col-sm-9">{{ file.file.size|filesizeformat }}</dd>
+
+        <dt class="col-sm-3">Uploaded</dt>
+        <dd class="col-sm-9">{{ file.created|date:"F j, Y, g:i a T" }}</dd>
+
+        <dt class="col-sm-3">Last Updated</dt>
+        <dd class="col-sm-9">{{ file.updated|date:"F j, Y, g:i a T" }}</dd>
+
+        <dt class="col-sm-3">System Path</dt>
+        <dd class="col-sm-9">
+            <code>{{ file.file.name }}</code>
+        </dd>
+      </dl>
+
+      <div class="mt-4">
+          <a href="{% url 'files:list' %}" class="btn btn-secondary">Back to Files</a>
+          {% if file.owner == user %}
+          <a href="{% url 'files:delete' file.pk %}" class="btn btn-danger float-end">Delete</a>
+          {% else %}
+          <a href="#" class="btn btn-outline-secondary disabled float-end" title="You can only delete your own files">Delete</a>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

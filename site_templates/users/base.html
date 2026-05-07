@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+
+
+{% block breadcrumbs %}{{ block.super }}
+<li class="breadcrumb-item"><a href="{% url 'users:profile' %}">Profile</a></li>
+{% endblock %}

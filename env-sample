@@ -1,0 +1,19 @@
+DEBUG = True
+
+# DATABASE_URL = sqlite:///db.sqlite3
+# DATABASE_URL = postgresql://user:password@localhost:5432/dbname
+
+# EMAIL_BACKEND = django.core.mail.backends.smtp.EmailBackend
+# SITE_NAME = My Awesome Site
+
+# SECRET_KEY = your-secret-key-abc-123
+# ALLOWED_HOSTS = .example.com
+
+# SENDFILE_BACKEND = sendfile.backends.simple
+# SENDFILE_ROOT = /path/to/your/uploads
+# SENDFILE_URL = /protected/
+
+# FILEBABY_AS_ATTACHMENT = 1
+
+# STATIC_ROOT = /path/to/your/staticfiles
+# MEDIA_ROOT = /path/to/your/mediafiles

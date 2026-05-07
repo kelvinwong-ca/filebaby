@@ -1,0 +1,60 @@
+{% extends "files/base.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}Add a File{% endblock %}
+
+
+{% block breadcrumbs %}{{ block.super }}<li class="breadcrumb-item active" aria-current="page">Add a File</li>{% endblock %}
+
+{% block extra_head %}
+{{ block.super }}
+
+<script src="https://unpkg.com/@deltablot/dropzone@7/dist/dropzone-min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/@deltablot/dropzone@7/dist/dropzone.css"
+  type="text/css"
+/>
+
+{% endblock %}
+
+{% block content %}
+
+<h2>Add a File</h2>
+<form id="filebaby" class="dropzone" action="" method="post" enctype="multipart/form-data">
+  <div class="fallback">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-primary">Upload</button>
+  </div>
+</form>
+
+<a href="{% url 'files:list' %}" class="btn btn-secondary mt-4">Back to Files</a>
+
+<script>
+  // Dropzone has been added as a global variable.
+  const csrfToken = "{{ csrf_token }}";
+  const dropzone = new Dropzone(
+    "#filebaby",
+    {
+      url: "{{ request.path }}",
+      maxFilesize: 10, // in MB
+      headers: {
+        "X-CSRFToken": csrfToken,
+        "X-Requested-By": "Dropzone"
+      }
+    }
+  );
+  dropzone.on("error", (file, message) => {
+    // Show the error message in an alert
+    const msg = message["error"];
+    if (typeof messagesController !== "undefined") {
+      messagesController.addMessage(msg, "danger");
+    } else {
+      console.log(msg);
+    }
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+
+{% comment %}
+
+Context variables:
+- files: A queryset of File objects to display.
+- files_from: (string or None) The best public name of the user whose files are listed or
+              "You" if the view is listing the current user's files.
+              None indicates the view is listing "all files" not a user's files.
+- your_files: (bool) True if the files are the current user's own files.
+
+{% endcomment %}
+
+
+{% block title %}Files{% endblock %}
+
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  {% if files_from %}{# A specific user's file are shown #}
+    <li class="breadcrumb-item"><a href="{% url 'files:list' %}">Files</a></li>
+    {% if your_files %}
+      <li class="breadcrumb-item active" aria-current="page">Your Files</li>
+    {% else %}
+      <li class="breadcrumb-item active" aria-current="page">Files from {{ files_from }}</li>
+    {% endif %}
+  {% else %}{# Files from everybody are shown #}
+    <li class="breadcrumb-item active" aria-current="page">Files</li>
+  {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1>
+    {% if your_files %}
+    Your Files
+    {% else %}
+    Files{% if files_from %}<span> from {{ files_from }}</span>{% endif %}
+    {% endif %}
+  </h1>
+  <div class="btn-group" role="group" aria-label="Your file controls">
+    <a href="{% url 'files:create' %}" class="btn btn-primary">Add a File</a>
+    {% if your_files %}
+    <a href="#" class="btn btn-outline-secondary disabled">Your Files</a>
+    {% else %}
+    <a href="{% url 'files:list_from' user.slug %}" class="btn btn-outline-primary">Your Files</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row">
+
+{% if files %}
+  {% for file in files %}
+    <div class="col-12 mb-4">{# File row #}
+      <h5 class="mb-1 overflow-y-hidden" title="{{ file.filename }}"><span class="text-truncate d-block" style="max-width: 100%;">{{ file.filename }}</span></h5>
+
+      <div class="d-block d-md-inline-block mb-md-2">
+        <small class="text-muted">
+          Size: {{ file.file.size|filesizeformat }} &nbsp;|&nbsp; Type: {{ file.content_type }}
+        </small>
+        <span class="d-none d-md-inline">&nbsp;|&nbsp;</span>
+      </div>
+      <div class="d-block d-md-inline-block mb-3 mb-md-2">
+        <small class="text-muted">
+          Uploaded by
+          {% if file.owner == user %}<span class="badge bg-success">You</span>
+          {% else %}<span class="badge bg-primary" title="{{ file.owner.best_name }}">{{ file.owner.best_name|truncatechars:15 }}</span>{% endif %}
+          on {{ file.created|date:"F j, Y, g:i a T" }}
+        </small>
+      </div>
+      <div class="col-12">{# Controls #}
+        <a href="{% url 'files:download' file.pk %}" class="btn btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-arrow-down-fill" viewBox="0 0 16 16">
+            <path d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 6.854-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5a.5.5 0 0 1 1 0v3.793l1.146-1.147a.5.5 0 0 1 .708.708"/>
+          </svg> &nbsp;
+          Download
+        </a>
+        &nbsp;
+        <div class="btn-group" role="group" aria-label="File controls">
+          {% if files_from %}{# Already showing files from a specific user, so disable this button #}
+          <a href="#" class="btn btn-outline-secondary disabled">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="1 1 22 22" width="24" height="20" fill="currentColor">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M20 21c0-3.87-3.58-7-8-7s-8 3.13-8 7"/>
+            </svg>
+          </a>
+          {% else %}{# See more files from a user with this button #}
+          <a href="{% url 'files:list_from' file.owner.slug %}"
+              class="btn {% if file.owner == user %}btn-outline-primary{% else %}btn-outline-info{% endif %}"
+              title="{% if file.owner == user %}Your files{% else %}More files from {{ file.owner.best_name }}{% endif %}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="1 1 22 22" width="24" height="20" fill="currentColor">
+              <circle cx="12" cy="8" r="4"/>
+              <path d="M20 21c0-3.87-3.58-7-8-7s-8 3.13-8 7"/>
+            </svg>
+          </a>
+          {% endif %}
+          <a href="{% url 'files:detail' file.pk %}" class="btn btn-outline-info">Details</a>
+          {% if file.owner == user %}
+          <a href="{% url 'files:delete' file.pk %}" class="btn btn-outline-danger">Delete</a>
+          {% else %}
+          <a href="#" class="btn btn-outline-secondary disabled" title="You can only delete your own files">Delete</a>
+          {% endif %}
+        </div>
+      </div>{# END Controls #}
+    </div>{# END File row #}
+  {% endfor %}
+
+{% else %}
+  <div class="col-12">
+    <p class="text-muted">No files uploaded yet.</p>
+  </div>
+{% endif %}
+</div>
+
+{% if is_paginated %}
+<nav aria-label="Page navigation" class="mt-4">
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+    {% else %}
+      <li class="page-item disabled">
+        <span class="page-link" aria-hidden="true">&laquo;</span>
+      </li>
+    {% endif %}
+
+    {% for i in page_obj.paginator.page_range %}
+      {% if page_obj.number == i %}
+        <li class="page-item active" aria-current="page">
+          <span class="page-link">{{ i }}</span>
+        </li>
+      {% else %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+        </li>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    {% else %}
+      <li class="page-item disabled">
+        <span class="page-link" aria-hidden="true">&raquo;</span>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+
+{% endblock %}

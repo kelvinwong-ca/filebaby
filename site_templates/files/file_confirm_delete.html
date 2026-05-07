@@ -1,0 +1,32 @@
+{% extends "files/base.html" %}
+
+
+{% block title %}Delete File{% endblock %}
+
+
+{% block breadcrumbs %}{{ block.super }}<li class="breadcrumb-item active" aria-current="page">Delete File</li>{% endblock %}
+
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    Confirm Deletion
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Are you sure you want to delete the file <strong>{{ file.filename }}</strong>?</p>
+                    <p class="text-muted small">This action cannot be undone.</p>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <a href="{% url 'files:list' %}" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-danger float-end">Confirm Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
