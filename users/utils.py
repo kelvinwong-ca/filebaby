@@ -59,6 +59,21 @@ def force_image_size(
 
 
 def resize_uploaded_image(image, width=150, height=150):
+    """
+    Resize an uploaded image to the specified width and height, returning a new ContentFile.
+
+    @param image: Uploaded image file (InMemoryUploadedFile or SimpleUploadedFile)
+    @param width: Desired width of the output image
+    @param height: Desired height of the output image
+
+    @raises PIL.UnidentifiedImageError: If the uploaded file is not a valid image
+
+    @return: ContentFile containing the resized image in PNG format
+    """
+    Image.MAX_IMAGE_PIXELS = 13_000_000
+    with Image.open(image) as pil_image:
+        pil_image.verify()
+    image.seek(0)
     pil_image = Image.open(image)
     resized_image = force_image_size(pil_image, width, height)
 

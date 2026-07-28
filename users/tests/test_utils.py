@@ -5,7 +5,7 @@ from PIL import Image
 
 from common.cases import BaseTestCase
 
-from ..utils import force_image_size
+from ..utils import force_image_size, resize_uploaded_image
 
 
 class ImageTestCase(BaseTestCase):
@@ -64,3 +64,31 @@ class ImageTestCase(BaseTestCase):
 
         resized_img = force_image_size(self.rect_not_tall)
         self.assertEqual(resized_img.size, self.expected_size)
+
+    def test_resize_uploaded_image_returns_png_and_keeps_name(self):
+        uploaded = self.get_uploaded_file(name="avatar.jpg", image=self.rect_large)
+
+        resized_file = resize_uploaded_image(uploaded, width=100, height=80)
+
+        self.assertEqual(resized_file.name, uploaded.name)
+        with Image.open(BytesIO(resized_file.read())) as resized_image:
+            self.assertEqual(resized_image.size, (100, 80))
+            self.assertEqual(resized_image.format, "PNG")
+
+    def test_resize_uploaded_image_uses_default_dimensions(self):
+        uploaded = self.get_uploaded_file(image=self.rect_small)
+
+        resized_file = resize_uploaded_image(uploaded)
+
+        with Image.open(BytesIO(resized_file.read())) as resized_image:
+            self.assertEqual(resized_image.size, self.expected_size)
+
+    def test_resize_uploaded_image_raises_for_invalid_image(self):
+        uploaded = self.create_test_file(
+            name="not-an-image.txt",
+            content=b"this is not image data",
+            content_type="text/plain",
+        )
+
+        with self.assertRaises(PIL.UnidentifiedImageError):
+            resize_uploaded_image(uploaded)

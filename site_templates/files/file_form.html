@@ -10,11 +10,13 @@
 {% block extra_head %}
 {{ block.super }}
 
-<script src="https://unpkg.com/@deltablot/dropzone@7/dist/dropzone-min.js"></script>
+<script src="https://unpkg.com/@deltablot/dropzone@7/dist/dropzone-min.js" integrity="sha256-egjHZu7e6McLuItbzLWJxtaa4UHkKm4UZOgkqRGobUY=" crossorigin="anonymous"></script>
 <link
   rel="stylesheet"
   href="https://unpkg.com/@deltablot/dropzone@7/dist/dropzone.css"
   type="text/css"
+  integrity="sha256-JNd8cTA4Ws4a2IPpfYck5+pmligPx2J1ZKfpjl1U/ic="
+  crossorigin="anonymous"
 />
 
 {% endblock %}
@@ -34,14 +36,13 @@
 
 <script>
   // Dropzone has been added as a global variable.
-  const csrfToken = "{{ csrf_token }}";
   const dropzone = new Dropzone(
     "#filebaby",
     {
       url: "{{ request.path }}",
       maxFilesize: 10, // in MB
       headers: {
-        "X-CSRFToken": csrfToken,
+        "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
         "X-Requested-By": "Dropzone"
       }
     }

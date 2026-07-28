@@ -6,7 +6,8 @@ DEBUG = True
 # EMAIL_BACKEND = django.core.mail.backends.smtp.EmailBackend
 # SITE_NAME = My Awesome Site
 
-# SECRET_KEY = your-secret-key-abc-123
+# Generate a strong key: python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+# SECRET_KEY = your-secret-key-here
 # ALLOWED_HOSTS = .example.com
 
 # SENDFILE_BACKEND = sendfile.backends.simple

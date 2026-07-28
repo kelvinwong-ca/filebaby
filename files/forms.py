@@ -73,11 +73,13 @@ class FileForm(forms.ModelForm):
             except DatabaseError:
                 # If the DB save fails, check if the file was already written to disk.
                 if instance.file and hasattr(instance.file, "path"):
-                    if os.path.exists(instance.file.path):
-                        logger.warning(
-                            f"DB transaction failed. Deleting orphan file: {instance.file.path}"
-                        )
+                    try:
                         os.remove(instance.file.path)
+                        logger.warning(
+                            "DB transaction failed. Deleted orphan file: %s", instance.file.path
+                        )
+                    except FileNotFoundError:
+                        pass
 
                 # Inform the view that the save failed
                 raise

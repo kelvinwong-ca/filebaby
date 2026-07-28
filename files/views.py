@@ -93,7 +93,7 @@ class FileListView(ListView):
             try:
                 user: Any = User.objects.get(user_filter, slug=self.kwargs["slug"])
             except User.DoesNotExist:
-                logging.info(
+                logger.info(
                     "Accessible user with slug '%s' does not exist.",
                     self.kwargs["slug"],
                 )

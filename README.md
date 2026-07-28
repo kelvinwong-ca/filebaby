@@ -5,8 +5,8 @@
 This app demonstrates working examples of `FileField` and `ImageField` in **Django**. Download it, run it locally, and explore the code to learn how file uploads work in practice.
 
 **Related blog posts:**
-* [Add an avatar to your profile using ImageField in Django 6.0](https://kelvinwong.ca/blog/2026/add-an-avatar-to-your-profile-using-imagefield-in-django-6-0/?utm_source=filebaby_app)
-* [Upload files in Django using FileField with CreateView and ListView](https://kelvinwong.ca/blog/2026/upload-files-using-filefield-and-generic-class-based-views-in-django-6-0/?utm_source=filebaby_app)
+* [Django User Avatar Upload Tutorial: Complete ImageField Guide For Django 6.0](https://kelvinwong.ca/blog/2026/add-an-avatar-to-your-profile-using-imagefield-in-django-6-0/?utm_source=github)
+* [Keep User Files Private in Django 6.0](https://kelvinwong.ca/blog/2026/keep-user-files-private-in-django-6-0/?utm_source=github)
 
 
 ## Quickstart
@@ -55,7 +55,9 @@ pip install -r requirements_dev.txt
 
 ### Configure Environment Variables
 
-Copy the sample environment file:
+> Set a unique `SECRET_KEY`
+
+Copy the sample environment file and review it:
 
 ```bash
 cp env-sample .env

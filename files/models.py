@@ -32,7 +32,7 @@ def get_user_files_storage():
 class Uploads:
     def __call__(self, instance, filename):
         # Return path relative to the storage root (e.g. 1/myfile.txt)
-        return os.path.join(str(instance.owner.id), filename)
+        return os.path.join(str(instance.owner.id), os.path.basename(filename))
 
 
 uploads_path = Uploads()

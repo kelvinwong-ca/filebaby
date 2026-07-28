@@ -1,9 +1,40 @@
 import os
+from unittest.mock import Mock
 
 from common.cases import BaseTestCase
 
-from ..models import File
+from ..models import File, uploads_path
 from .factories import FileFactory
+
+
+class UploadsPathTestCase(BaseTestCase):
+    def setUp(self):
+        super().setUp()
+        self.instance = Mock(owner=self.member)
+
+    def test_normal_filename(self):
+        path = uploads_path(self.instance, "document.pdf")
+        self.assertEqual(path, f"{self.member.id}/document.pdf")
+
+    def test_traversal_with_dotdot_slash(self):
+        path = uploads_path(self.instance, "../../etc/passwd")
+        self.assertEqual(path, f"{self.member.id}/passwd")
+
+    def test_absolute_path(self):
+        path = uploads_path(self.instance, "/etc/passwd")
+        self.assertEqual(path, f"{self.member.id}/passwd")
+
+    def test_deep_traversal(self):
+        path = uploads_path(self.instance, "../../../../../../tmp/evil.txt")
+        self.assertEqual(path, f"{self.member.id}/evil.txt")
+
+    def test_filename_with_leading_slashes(self):
+        path = uploads_path(self.instance, "///etc/passwd")
+        self.assertEqual(path, f"{self.member.id}/passwd")
+
+    def test_only_filename(self):
+        path = uploads_path(self.instance, "report.pdf")
+        self.assertEqual(path, f"{self.member.id}/report.pdf")
 
 
 class FileTestCase(BaseTestCase):
